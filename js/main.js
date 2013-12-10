@@ -259,8 +259,7 @@
       if (pad == exclude) {
         continue;
       }
-      if (pad.isCollidingWith(comingFrom, this)) {
-		this.changeBallColor();
+      if (pad.isCollidingWith(comingFrom, this)) {		
 		return true;
       }
     }
@@ -525,9 +524,10 @@
         ball.event.dy = -ball.event.dy;
       }
         
-      // Update the current score    
+      // Update the current score. We also make ball.event.hasTouchedPad to true to know what ball touched the pad
       if (collisionWithHorizontalPad || collisionWithVerticalPad) {
         score.current += Game.Config.Score.bounceOnPad;
+		ball.event.hasTouchedPad = true;
       } else if (horizontalBounce || verticalBounce) {
         score.current += Game.Config.Score.bounceOnWall;
       }      
@@ -579,6 +579,14 @@
       eltScore.textContent = score.current;
       score.previous = score.current;
     }
+	
+	// Change the color of the ball
+	for (ball of Ball.balls) {
+      if (ball.event.hasTouchedPad) {
+		ball.changeBallColor();
+		ball.event.hasTouchedPad = false;
+	  }
+    }	
 
     // -------- Write to DOM -------------
 
